@@ -113,32 +113,36 @@ public class Model extends Observable {
 
         board.setViewingPerspective(side);
 
+        // 模拟向上滑动，假设棋盘是4 x 4的
+        // i是列数，从左到右分别为0 1 2 3
         for (int i = 0; i < board.size(); i++) {
-            int lastMergedPos = board.size(); // 表示最后一个被合并的位置，避免一次操作中多次合并
-
+            // lastMergedPos 代表发生了合并的最大行数，一开始没有发生合并，所以默认为4
+            int lastMergedPos = board.size();
+            // j是行数，从下往上分别为0 1 2 3，从上往下遍历
             for (int j = board.size() - 1; j >= 0; j--) {
-                Tile currentTile = board.tile(i, j);
-                if (currentTile == null) continue;
-
+                // 获取当前位置的滑块
+                Tile current = board.tile(i, j);
+                // 如果当前位置为空，遍历下一行
+                if (current == null) continue;
+                // targetPos是本次滑动中，该滑块想要滑动到的行，一开始默认先等于初始位置
                 int targetPos = j;
                 while (targetPos + 1 < lastMergedPos && board.tile(i, targetPos + 1) == null) {
-                    targetPos++;  // 移动到空的位置
+                    targetPos++;
                 }
-
-                // 如果下一个位置的值与当前值相同，则进行合并操作
-                if (targetPos + 1 < lastMergedPos && board.tile(i, targetPos + 1).value() == currentTile.value()) {
-                    board.move(i, targetPos + 1, currentTile);
-                    score += currentTile.value() * 2;
+                if (targetPos + 1 < lastMergedPos && board.tile(i, targetPos + 1).value() == current.value()) {
+                    board.move(i, targetPos + 1, current);
                     lastMergedPos = targetPos + 1;
+                    score += current.value() * 2;
                     changed = true;
-                } else if (targetPos != j) {  // 如果只是移动操作
-                    board.move(i, targetPos, currentTile);
+                } else if (targetPos != j) {
+                    board.move(i, targetPos, current);
                     changed = true;
                 }
             }
         }
 
         board.setViewingPerspective(Side.NORTH);
+
         checkGameOver();
         if (changed) {
             setChanged();
@@ -184,10 +188,8 @@ public class Model extends Observable {
         for (int i = 0; i < b.size(); i++) {
             for (int j = 0; j < b.size(); j++) {
                 Tile currentTile = b.tile(i, j);
-                if (currentTile != null) {
-                    if (currentTile.value() == MAX_PIECE) {
-                        return true;
-                    }
+                if (currentTile != null && currentTile.value() == MAX_PIECE) {
+                    return true;
                 }
             }
         }
@@ -205,25 +207,14 @@ public class Model extends Observable {
         if (emptySpaceExists(b)) {
             return true;
         }
-
         for (int i = 0; i < b.size(); i++) {
             for (int j = 0; j < b.size(); j++) {
-                Tile currentTile = b.tile(i, j);
-
-                // Check the tile to the right
-                if (i < b.size() - 1) {
-                    Tile rightTile = b.tile(i + 1, j);
-                    if (currentTile.value() == rightTile.value()) {
-                        return true;
-                    }
+                Tile current = b.tile(i, j);
+                if (i < b.size() - 1 && current.value() == b.tile(i + 1, j).value()) {
+                    return true;
                 }
-
-                // Check the tile above
-                if (j < b.size() - 1) {
-                    Tile upTile = b.tile(i, j + 1);
-                    if (currentTile.value() == upTile.value()) {
-                        return true;
-                    }
+                if (j < b.size() - 1 && current.value() == b.tile(i, j + 1).value()) {
+                    return true;
                 }
             }
         }
