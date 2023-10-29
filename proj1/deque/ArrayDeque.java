@@ -1,8 +1,9 @@
 package deque;
 
+import java.util.Collection;
 import java.util.Iterator;
 
-public class ArrayDeque<T> implements Deque<T> , Iterable<T> {
+public class ArrayDeque<T> implements Deque<T>, Iterable<T> {
     private Object[] items;
     private int size;
     private static final int INITIAL_CAPACITY = 8;
@@ -118,41 +119,40 @@ public class ArrayDeque<T> implements Deque<T> , Iterable<T> {
 
     @Override
     public boolean equals(Object o) {
-
-        if (!(o instanceof ArrayDeque || o instanceof LinkedListDeque)) {
+        if (o == null) {
             return false;
         }
-        if (o instanceof ArrayDeque) {
-            ArrayDeque<?> otherDeque = (ArrayDeque<?>) o;
-            if (otherDeque.size() != size) {
-                return false;
-            }
-            Iterator<T> iter1 = iterator();
-            Iterator<?> iter2 = otherDeque.iterator();
-            while (iter1.hasNext() && iter2.hasNext()) {
-                Object item1 = iter1.next();
-                Object item2 = iter2.next();
-                if (!item1.equals(item2)) {
-                    return false;
-                }
-            }
-            return true;
 
-        }else {
-            LinkedListDeque<?> otherDeque = (LinkedListDeque<?>) o;
-            if (otherDeque.size() != size) {
-                return false;
-            }
-            Iterator<T> iter1 = iterator();
-            Iterator<?> iter2 = otherDeque.iterator();
-            while (iter1.hasNext() && iter2.hasNext()) {
-                Object item1 = iter1.next();
-                Object item2 = iter2.next();
-                if (!item1.equals(item2)) {
-                    return false;
-                }
-            }
-            return true;
+        if (o instanceof ArrayDeque<?>) {
+            return isEqualDeque((ArrayDeque<?>) o);
+        } else if (o instanceof LinkedListDeque<?>) {
+            return isEqualDeque((LinkedListDeque<?>) o);
+        } else {
+            return false;
         }
     }
+
+    private boolean isEqualDeque(Iterable<?> otherDeque) {
+        // Assuming you have a size() method available for your deque.
+        // Note: You'd need to cast otherDeque to its specific type if
+        // you're calling specific methods not present in the Iterable interface.
+        if (((Collection<?>) otherDeque).size() != size) {
+            return false;
+        }
+
+        Iterator<T> iter1 = iterator();
+        Iterator<?> iter2 = otherDeque.iterator();
+
+        while (iter1.hasNext() && iter2.hasNext()) {
+            Object item1 = iter1.next();
+            Object item2 = iter2.next();
+
+            if (!item1.equals(item2)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }
