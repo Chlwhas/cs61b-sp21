@@ -1,15 +1,15 @@
 package deque;
 
-public interface Deque <E> {
-    void addFirst(E e);
-    void addLast(E e);
+public interface Deque<T> extends Iterable<T> {
+    void addFirst(T t);
+    void addLast(T t);
     int size();
     void printDeque();
-    E removeFirst();
-    E removeLast();
-    E get(int index);
+    T removeFirst();
+    T removeLast();
+    T get(int index);
 
-    default boolean isEmpty(){
+    default boolean isEmpty() {
         return size() == 0;
     }
 }
