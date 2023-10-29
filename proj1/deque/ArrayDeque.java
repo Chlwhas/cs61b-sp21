@@ -36,6 +36,7 @@ public class ArrayDeque<E> implements Deque<E>, Iterable<E>{
     }
     @Override
     public E removeFirst(){
+        if (size == 0) return null;
         if (items.length > 16 && (double) size / items.length < MIN_USAGE_RATE) {
             items = resize(items.length / 2);
         }
@@ -48,6 +49,7 @@ public class ArrayDeque<E> implements Deque<E>, Iterable<E>{
     }
     @Override
     public E removeLast(){
+        if (size == 0) return null;
         if (items.length > 16 && (double) size / items.length < MIN_USAGE_RATE) {
             items = resize(items.length / 2);
         }
