@@ -1,6 +1,5 @@
 package deque;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
@@ -145,7 +144,7 @@ public class LinkedListDeque<T> implements Deque<T>, Iterable<T> {
             if (((ArrayDeque<?>) o).size() != size()) {
                 return false;
             }
-        }else {
+        } else {
             return false;
         }
 
